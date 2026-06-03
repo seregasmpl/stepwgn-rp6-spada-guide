@@ -14,7 +14,7 @@
 
 Сайт будет доступен по адресу:
 
-`https://<ваш-логин>.github.io/<имя-репозитория>/`
+`https://seregasmpl.github.io/stepwgn-rp6-spada-guide/`
 
 ### 1. Создайте репозиторий на GitHub
 
@@ -23,21 +23,25 @@
 3. **Public** (для бесплатного Pages) или Private + Pages (платный план)
 4. Без README / .gitignore — они уже в этой папке
 
-### 2. Залейте код из этой папки
+### 2. Залейте код (один скрипт)
 
-В PowerShell (путь к папке — ваш):
+В PowerShell:
 
 ```powershell
 cd "c:\Папки для проги\syepwgn\stepwgn-rp6-spada-guide"
-git init
-git add .
-git commit -m "STEP WGN RP6 SPADA guide v1.4"
-git branch -M main
-git remote add origin https://github.com/<ВАШ_ЛОГИН>/stepwgn-rp6-spada-guide.git
-git push -u origin main
+.\tools\publish-github.ps1
 ```
 
-Первый push ~100 MB (фото) — может занять несколько минут.
+Скрипт: вход в GitHub (если нужно) → создаёт репо `seregasmpl/stepwgn-rp6-spada-guide` → push → включает Pages.
+
+Первый push ~100 MB — несколько минут.
+
+Ручной вариант:
+
+```powershell
+git remote set-url origin https://github.com/seregasmpl/stepwgn-rp6-spada-guide.git
+git push -u origin main
+```
 
 ### 3. Включите GitHub Pages
 
@@ -49,8 +53,8 @@ git push -u origin main
 
 ### 4. Проверка
 
-- Главная: `https://<логин>.github.io/<репо>/`
-- iPhone-версия: `https://<логин>.github.io/<репо>/STEPWGN-SPADA-guide-iphone.html`
+- Главная: https://seregasmpl.github.io/stepwgn-rp6-spada-guide/
+- iPhone: https://seregasmpl.github.io/stepwgn-rp6-spada-guide/STEPWGN-SPADA-guide-iphone.html
 
 На телефоне: «Поделиться» → **На экран Домой** (есть `manifest.json` для режима приложения).
 
