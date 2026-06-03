@@ -32,7 +32,7 @@ Write-Host "Push (~100 MB, несколько минут)..." -ForegroundColor C
 git push -u origin main
 
 Write-Host "Включаю GitHub Pages (Actions)..." -ForegroundColor Cyan
-gh api -X PUT "repos/$Owner/$Repo/pages" -f build_type=workflow 2>$null
+gh api -X POST "repos/$Owner/$Repo/pages" -f build_type=workflow 2>$null
 
 Write-Host ""
 Write-Host "Готово. Сайт появится через 1-3 мин после Actions:" -ForegroundColor Green
