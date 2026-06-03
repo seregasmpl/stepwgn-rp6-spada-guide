@@ -17,13 +17,6 @@ body{
   padding-bottom:env(safe-area-inset-bottom);
   -webkit-overflow-scrolling:touch;
 }
-header{padding-top:env(safe-area-inset-top)}
-.wrap{
-  padding:12px;
-  padding-left:max(12px,env(safe-area-inset-left));
-  padding-right:max(12px,env(safe-area-inset-right));
-}
-.title h1{font-size:16px;line-height:1.35}
 .img-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 """
 
@@ -113,14 +106,6 @@ def main():
         html_body = html_body.replace(f'"{rel}"', f'"{uri}"')
         html_body = html_body.replace(f"'{rel}'", f"'{uri}'")
 
-    html_body = html_body.replace(
-        "v1.4</span> <span class=\"muted\">офлайн · HD · зум</span>",
-        "iPhone</span> <span class=\"muted\">один файл · офлайн</span>",
-    )
-    html_body = html_body.replace(
-        '<div class="muted">Онлайн: <a href="https://seregasmpl.github.io/stepwgn-rp6-spada-guide/">GitHub Pages</a></div>',
-        '<div class="muted">Файлы → откройте в Safari</div>',
-    )
     html_body = html_body.replace(
         "Клик по фото — увеличение на весь экран (Esc — закрыть). Офлайн.",
         "Клик по фото — увеличение. Меню: «☰ Разделы». Офлайн.",
