@@ -9,42 +9,64 @@ function cssEscape(value) {
   return String(value).replace(/[^a-zA-Z0-9_\u00A0-\uFFFF-]/g, "\\$&");
 }
 
+function isMobileNav() {
+  return window.matchMedia("(max-width: 980px)").matches;
+}
+
+function getNavToggle() {
+  return document.querySelector("[data-nav-toggle]");
+}
+
+function getNavBackdrop() {
+  return document.querySelector("[data-nav-backdrop]");
+}
+
+function setDrawerOpen(open) {
+  const nav = document.querySelector(".nav");
+  const backdrop = getNavBackdrop();
+  const toggle = getNavToggle();
+  if (!nav) return;
+
+  nav.classList.toggle("is-open", open);
+  nav.setAttribute("aria-hidden", open ? "false" : "true");
+  backdrop?.classList.toggle("is-open", open);
+  if (backdrop) {
+    if (open) backdrop.removeAttribute("hidden");
+    else backdrop.setAttribute("hidden", "");
+  }
+  document.body.classList.toggle("nav-drawer-open", open);
+  toggle?.setAttribute("aria-expanded", open ? "true" : "false");
+  toggle?.setAttribute("aria-label", open ? "Закрыть меню" : "Открыть меню");
+  syncNavAccessibility();
+}
+
 function closeMobileNav() {
-  document.querySelector(".nav")?.classList.remove("is-open");
-  document.querySelector(".nav-backdrop")?.classList.remove("is-open");
+  if (!isMobileNav()) return;
+  setDrawerOpen(false);
+}
+
+function openMobileNav() {
+  if (!isMobileNav()) return;
+  setDrawerOpen(true);
 }
 
 function initMobileNav() {
   const nav = document.querySelector(".nav");
-  if (!nav) return;
+  const toggle = getNavToggle();
+  const backdrop = getNavBackdrop();
+  if (!nav || !toggle) return;
 
-  let btn = document.querySelector("[data-nav-toggle]");
-  let backdrop = document.querySelector("[data-nav-backdrop]");
-  if (!btn) {
-    btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "nav-toggle";
-    btn.setAttribute("data-nav-toggle", "");
-    btn.textContent = "☰ Разделы";
-    nav.parentNode.insertBefore(btn, nav);
-  }
-  if (!backdrop) {
-    backdrop = document.createElement("div");
-    backdrop.className = "nav-backdrop";
-    backdrop.setAttribute("data-nav-backdrop", "");
-    document.body.appendChild(backdrop);
-  }
-
-  const close = () => closeMobileNav();
-  const open = () => {
-    nav.classList.add("is-open");
-    backdrop.classList.add("is-open");
-  };
-  btn.addEventListener("click", () => {
-    if (nav.classList.contains("is-open")) close();
-    else open();
+  toggle.addEventListener("click", () => {
+    if (nav.classList.contains("is-open")) closeMobileNav();
+    else openMobileNav();
   });
-  backdrop.addEventListener("click", close);
+
+  backdrop?.addEventListener("click", closeMobileNav);
+  document.querySelector("[data-nav-close]")?.addEventListener("click", closeMobileNav);
+
+  window.matchMedia("(max-width: 980px)").addEventListener("change", (e) => {
+    if (!e.matches) closeMobileNav();
+  });
 }
 
 function hashTarget() {
@@ -191,7 +213,7 @@ function initPanelRouter() {
     if (showPanel(panelId)) {
       history.replaceState(null, "", href.startsWith("#") ? href : "#" + id);
     }
-  }, { passive: false });
+  });
 
   document.querySelector("[data-panel-prev]")?.addEventListener("click", () => navigatePanel(-1));
   document.querySelector("[data-panel-next]")?.addEventListener("click", () => navigatePanel(1));
@@ -202,6 +224,10 @@ function initPanelRouter() {
 
   document.addEventListener("keydown", (e) => {
     if (e.target.closest("input, textarea")) return;
+    if (e.key === "Escape") {
+      closeMobileNav();
+      return;
+    }
     if (e.key === "ArrowLeft") navigatePanel(-1);
     if (e.key === "ArrowRight") navigatePanel(1);
   });
@@ -265,9 +291,25 @@ function initLightbox() {
   });
 }
 
+function syncNavAccessibility() {
+  const nav = document.querySelector(".nav");
+  if (!nav) return;
+  if (isMobileNav()) {
+    nav.setAttribute("aria-hidden", nav.classList.contains("is-open") ? "false" : "true");
+  } else {
+    nav.setAttribute("aria-hidden", "false");
+    nav.classList.remove("is-open");
+    document.body.classList.remove("nav-drawer-open");
+    getNavBackdrop()?.classList.remove("is-open");
+    getNavBackdrop()?.setAttribute("hidden", "");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   try {
     initMobileNav();
+    syncNavAccessibility();
+    window.matchMedia("(max-width: 980px)").addEventListener("change", syncNavAccessibility);
     initPanelRouter();
     initNavFilter();
     initLightbox();

@@ -24,71 +24,14 @@
     </div>
   </header>
 
+  <div class="nav-backdrop" data-nav-backdrop hidden></div>
+
   <div class="wrap layout">
-    <aside class="nav" aria-label="Навигация">
-      <input data-nav-filter placeholder="Поиск по разделам..." />
-      <div class="nav-scroll" data-nav-scroll>
-      <ul data-nav-list>
-        <li class="nav-group">Старт</li>
-        <li><a data-nav-item href="#start">Быстрый старт: колесико БК</a></li>
-        <li><a data-nav-item href="#photos-selector">Фото: ライトセレクターホイール</a></li>
-
-        <li class="nav-group">Приборка (MID)</li>
-        <li><a data-nav-item href="#mid-right">Правый MID: все экраны</a></li>
-        <li><a class="sub" data-nav-item href="#mid-screens-photos">↳ фото экранов MID</a></li>
-        <li><a class="sub" data-nav-item href="#customize-tree">↳ 時計/車両設定: дерево</a></li>
-        <li><a class="sub" data-nav-item href="#mid-left">Левый MID (радио/часы)</a></li>
-        <li><a class="sub" data-nav-item href="#maintenance-oil">ТО / масло / リセット</a></li>
-        <li><a class="sub" data-nav-item href="#photos-meter-modes">Режимы 2眼/バー/シンプル</a></li>
-        <li><a class="sub" data-nav-item href="#trip-reset">Сброс Trip</a></li>
-        <li><a class="sub" data-nav-item href="#brightness">Яркость</a></li>
-        <li><a class="sub" data-nav-item href="#meter-settings">メーター表示設定</a></li>
-        <li><a class="sub" data-nav-item href="#vehicle-settings">Таблица 車両設定</a></li>
-        <li><a class="sub" data-nav-item href="#tire-angle">Угол колёс (タイヤ角度)</a></li>
-        <li><a class="sub" data-nav-item href="#adas-wheel">安全支援情報</a></li>
-
-        <li class="nav-group">Honda CONNECT</li>
-        <li><a data-nav-item href="#honda-connect">HOME + 設定／情報</a></li>
-        <li><a class="sub" data-nav-item href="#connect-hardware">Кнопки под экраном</a></li>
-
-        <li class="nav-group">Салон</li>
-        <li><a data-nav-item href="#controls-everywhere">Обзор салона</a></li>
-        <li><a class="sub" data-nav-item href="#climate-panel">Климат (перед)</a></li>
-        <li><a class="sub" data-nav-item href="#climate-rear">Климат 2–3 ряд</a></li>
-        <li><a class="sub" data-nav-item href="#seat-heater">Подогрев сидений</a></li>
-        <li><a class="sub" data-nav-item href="#lights-controls">Свет</a></li>
-        <li><a class="sub" data-nav-item href="#wipers-detail">Дворники</a></li>
-        <li><a class="sub" data-nav-item href="#shift-hazard">Селектор / аварийка</a></li>
-        <li><a class="sub" data-nav-item href="#doors-mirrors">Двери / зеркала</a></li>
-        <li><a class="sub" data-nav-item href="#knee-switches">Блок у колена</a></li>
-        <li><a class="sub" data-nav-item href="#epb-autohold">EPB / Auto Hold</a></li>
-        <li><a class="sub" data-nav-item href="#smart-key">Smart Key</a></li>
-        <li><a class="sub" data-nav-item href="#engine-start">ENGINE START/STOP</a></li>
-        <li><a class="sub" data-nav-item href="#cameras-multiview">Камеры / Multi-View</a></li>
-
-        <li class="nav-group">Сиденья и удобства</li>
-        <li><a data-nav-item href="#seats-walkthrough">Уок-тру и комплектации</a></li>
-        <li><a class="sub" data-nav-item href="#seats-adjustment">Настройка сидений (1–3 ряд)</a></li>
-        <li><a class="sub" data-nav-item href="#rear-rows-comfort">2–3 ряд: столики, шторы, USB</a></li>
-        <li><a data-nav-item href="#storage-map">Хранение и 15 подстаканников</a></li>
-        <li><a class="sub" data-nav-item href="#magic-seat-luggage">マジックシート / багажник</a></li>
-        <li><a data-nav-item href="#hidden-features">Скрытые и полезные функции</a></li>
-
-        <li class="nav-group">Руль и лампы</li>
-        <li><a data-nav-item href="#steering-wheel">Руль: ACC + аудио</a></li>
-        <li><a data-nav-item href="#display-lamps">Индикаторы (表示灯)</a></li>
-        <li><a data-nav-item href="#warning-lamps">Предупреждения (警告灯)</a></li>
-
-        <li class="nav-group">Справочник</li>
-        <li><a data-nav-item href="#glossary">JP→RU словарь</a></li>
-        <li><a data-nav-item href="#sources">Источники</a></li>
-      </ul>
-      </div>
-      <p class="nav-foot muted">Меню прокручивается отдельно от текста справа.</p>
-    </aside>
-
     <div class="content-col">
       <div class="panel-toolbar">
+        <button type="button" class="nav-toggle" data-nav-toggle aria-label="Открыть меню" aria-expanded="false" aria-controls="guide-nav">
+          <span class="nav-toggle-bars" aria-hidden="true"></span>
+        </button>
         <button type="button" class="panel-btn" data-panel-prev aria-label="Предыдущий раздел">←</button>
         <p class="panel-head" data-panel-title aria-live="polite"><strong>—</strong></p>
         <button type="button" class="panel-btn" data-panel-next aria-label="Следующий раздел">→</button>
@@ -1209,6 +1152,72 @@
         Honda STEP WGN RP6 SPADA — v1.4. Клик по фото — увеличение на весь экран (Esc — закрыть). Офлайн.
       </footer>
     </div>
+
+    <aside class="nav" id="guide-nav" aria-label="Навигация">
+      <div class="nav-drawer-head">
+        <span class="nav-drawer-title">Разделы</span>
+        <button type="button" class="nav-close" data-nav-close aria-label="Закрыть меню">×</button>
+      </div>
+      <input data-nav-filter placeholder="Поиск по разделам..." />
+      <div class="nav-scroll" data-nav-scroll>
+      <ul data-nav-list>
+        <li class="nav-group">Старт</li>
+        <li><a data-nav-item href="#start">Быстрый старт: колесико БК</a></li>
+        <li><a data-nav-item href="#photos-selector">Фото: ライトセレクターホイール</a></li>
+
+        <li class="nav-group">Приборка (MID)</li>
+        <li><a data-nav-item href="#mid-right">Правый MID: все экраны</a></li>
+        <li><a class="sub" data-nav-item href="#mid-screens-photos">↳ фото экранов MID</a></li>
+        <li><a class="sub" data-nav-item href="#customize-tree">↳ 時計/車両設定: дерево</a></li>
+        <li><a class="sub" data-nav-item href="#mid-left">Левый MID (радио/часы)</a></li>
+        <li><a class="sub" data-nav-item href="#maintenance-oil">ТО / масло / リセット</a></li>
+        <li><a class="sub" data-nav-item href="#photos-meter-modes">Режимы 2眼/バー/シンプル</a></li>
+        <li><a class="sub" data-nav-item href="#trip-reset">Сброс Trip</a></li>
+        <li><a class="sub" data-nav-item href="#brightness">Яркость</a></li>
+        <li><a class="sub" data-nav-item href="#meter-settings">メーター表示設定</a></li>
+        <li><a class="sub" data-nav-item href="#vehicle-settings">Таблица 車両設定</a></li>
+        <li><a class="sub" data-nav-item href="#tire-angle">Угол колёс (タイヤ角度)</a></li>
+        <li><a class="sub" data-nav-item href="#adas-wheel">安全支援情報</a></li>
+
+        <li class="nav-group">Honda CONNECT</li>
+        <li><a data-nav-item href="#honda-connect">HOME + 設定／情報</a></li>
+        <li><a class="sub" data-nav-item href="#connect-hardware">Кнопки под экраном</a></li>
+
+        <li class="nav-group">Салон</li>
+        <li><a data-nav-item href="#controls-everywhere">Обзор салона</a></li>
+        <li><a class="sub" data-nav-item href="#climate-panel">Климат (перед)</a></li>
+        <li><a class="sub" data-nav-item href="#climate-rear">Климат 2–3 ряд</a></li>
+        <li><a class="sub" data-nav-item href="#seat-heater">Подогрев сидений</a></li>
+        <li><a class="sub" data-nav-item href="#lights-controls">Свет</a></li>
+        <li><a class="sub" data-nav-item href="#wipers-detail">Дворники</a></li>
+        <li><a class="sub" data-nav-item href="#shift-hazard">Селектор / аварийка</a></li>
+        <li><a class="sub" data-nav-item href="#doors-mirrors">Двери / зеркала</a></li>
+        <li><a class="sub" data-nav-item href="#knee-switches">Блок у колена</a></li>
+        <li><a class="sub" data-nav-item href="#epb-autohold">EPB / Auto Hold</a></li>
+        <li><a class="sub" data-nav-item href="#smart-key">Smart Key</a></li>
+        <li><a class="sub" data-nav-item href="#engine-start">ENGINE START/STOP</a></li>
+        <li><a class="sub" data-nav-item href="#cameras-multiview">Камеры / Multi-View</a></li>
+
+        <li class="nav-group">Сиденья и удобства</li>
+        <li><a data-nav-item href="#seats-walkthrough">Уок-тру и комплектации</a></li>
+        <li><a class="sub" data-nav-item href="#seats-adjustment">Настройка сидений (1–3 ряд)</a></li>
+        <li><a class="sub" data-nav-item href="#rear-rows-comfort">2–3 ряд: столики, шторы, USB</a></li>
+        <li><a data-nav-item href="#storage-map">Хранение и 15 подстаканников</a></li>
+        <li><a class="sub" data-nav-item href="#magic-seat-luggage">マジックシート / багажник</a></li>
+        <li><a data-nav-item href="#hidden-features">Скрытые и полезные функции</a></li>
+
+        <li class="nav-group">Руль и лампы</li>
+        <li><a data-nav-item href="#steering-wheel">Руль: ACC + аудио</a></li>
+        <li><a data-nav-item href="#display-lamps">Индикаторы (表示灯)</a></li>
+        <li><a data-nav-item href="#warning-lamps">Предупреждения (警告灯)</a></li>
+
+        <li class="nav-group">Справочник</li>
+        <li><a data-nav-item href="#glossary">JP→RU словарь</a></li>
+        <li><a data-nav-item href="#sources">Источники</a></li>
+      </ul>
+      </div>
+      <p class="nav-foot muted">На телефоне: ☰ слева вверху — меню разделов.</p>
+    </aside>
   </div>
 
   <script src="./assets/js/app.js"></script>
