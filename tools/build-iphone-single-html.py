@@ -11,104 +11,20 @@ OUT = ROOT / "STEPWGN-SPADA-guide-iphone.html"
 CSS = ROOT / "assets/css/style.css"
 JS = ROOT / "assets/js/app.js"
 
-IPHONE_CSS = """
-/* iPhone / mobile */
+EXTRA_CSS = """
 html{-webkit-text-size-adjust:100%}
 body{
   padding-bottom:env(safe-area-inset-bottom);
   -webkit-overflow-scrolling:touch;
 }
 header{padding-top:env(safe-area-inset-top)}
-.wrap{padding:12px;padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+.wrap{
+  padding:12px;
+  padding-left:max(12px,env(safe-area-inset-left));
+  padding-right:max(12px,env(safe-area-inset-right));
+}
 .title h1{font-size:16px;line-height:1.35}
-.nav-toggle{
-  display:none;
-  width:100%;
-  margin-bottom:8px;
-  padding:12px 14px;
-  font-size:15px;
-  font-weight:600;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:rgba(102,179,255,.12);
-  color:var(--text);
-  cursor:pointer;
-}
-@media (max-width: 980px){
-  :root{--header-h:56px}
-  .layout{display:block;min-height:auto}
-  .nav-toggle{display:block}
-  .nav{
-    position:fixed;
-    left:0;right:0;bottom:0;
-    top:auto;
-    max-height:min(70vh,520px);
-    z-index:50;
-    border-radius:16px 16px 0 0;
-    transform:translateY(110%);
-    transition:transform .25s ease;
-    box-shadow:0 -8px 32px rgba(0,0,0,.45);
-    padding-bottom:max(12px,env(safe-area-inset-bottom));
-  }
-  .nav.is-open{transform:translateY(0)}
-  .nav-backdrop{
-    display:none;
-    position:fixed;inset:0;
-    background:rgba(0,0,0,.5);
-    z-index:49;
-  }
-  .nav-backdrop.is-open{display:block}
-  .content-col{
-    position:static;
-    max-height:none;
-    min-height:calc(100vh - var(--header-h) - 8px);
-  }
-  .main-scroll{overflow:visible;min-height:0}
-  .panel-btn{
-    min-width:48px;min-height:48px;
-    font-size:20px;
-  }
-  .nav a{padding:12px 12px;font-size:15px}
-  .nav input{font-size:16px;padding:12px}
-  .table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .table th,.table td{font-size:13px;padding:8px}
-  .img-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
-  .lightbox{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
-  .lightbox-close{top:max(12px,env(safe-area-inset-top));right:12px;min-width:48px;min-height:48px}
-  .lightbox img{max-width:100vw;max-height:85vh}
-  .nav-foot{display:none}
-}
-"""
-
-IPHONE_JS = """
-function initMobileNav(){
-  const nav=document.querySelector('.nav');
-  if(!nav) return;
-  let btn=document.querySelector('[data-nav-toggle]');
-  let backdrop=document.querySelector('.nav-backdrop');
-  if(!btn){
-    btn=document.createElement('button');
-    btn.type='button';
-    btn.className='nav-toggle';
-    btn.setAttribute('data-nav-toggle','');
-    btn.textContent='☰ Разделы';
-    nav.parentNode.insertBefore(btn,nav);
-  }
-  if(!backdrop){
-    backdrop=document.createElement('div');
-    backdrop.className='nav-backdrop';
-    backdrop.setAttribute('data-nav-backdrop','');
-    document.body.appendChild(backdrop);
-  }
-  const close=()=>{nav.classList.remove('is-open');backdrop.classList.remove('is-open');};
-  const open=()=>{nav.classList.add('is-open');backdrop.classList.add('is-open');};
-  btn.onclick=()=>nav.classList.contains('is-open')?close():open();
-  backdrop.onclick=close;
-  nav.addEventListener('click',e=>{
-    if(e.target.closest('[data-nav-item]')) close();
-  });
-}
-document.addEventListener('DOMContentLoaded',()=>{initMobileNav();});
+.img-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
 """
 
 MAX_EDGE = 1200
@@ -123,7 +39,6 @@ def resolve_file(rel: str) -> Path | None:
     fp = ROOT / rel[2:].replace("/", "\\")
     if fp.is_file():
         return fp
-    # try without -200xNNN in name
     stem = fp.stem
     ext = fp.suffix
     plain = re.sub(r"-\d+x\d+$", "", stem, flags=re.I)
@@ -164,13 +79,19 @@ def image_to_data_uri(path: Path) -> str:
 
 def main():
     html = INDEX.read_text(encoding="utf-8")
-    css = CSS.read_text(encoding="utf-8") + IPHONE_CSS
-    js = JS.read_text(encoding="utf-8") + IPHONE_JS
+    css = CSS.read_text(encoding="utf-8") + EXTRA_CSS
+    js = JS.read_text(encoding="utf-8")
 
     html = re.sub(r'<link[^>]*style\.css[^>]*>\s*', "", html)
     html = re.sub(r'<script[^>]*app\.js[^>]*></script>\s*', "", html)
 
-    paths = collect_paths(html)
+    body_end = html.rfind("</body>")
+    if body_end == -1:
+        raise SystemExit("index.html: missing </body>")
+    html_body = html[:body_end]
+    html_tail = html[body_end:]
+
+    paths = collect_paths(html_body)
     cache: dict[str, str] = {}
     total = 0
     for i, rel in enumerate(sorted(paths), 1):
@@ -189,22 +110,23 @@ def main():
             print("embed", i, "/", len(paths))
 
     for rel, uri in cache.items():
-        html = html.replace(f'"{rel}"', f'"{uri}"')
-        html = html.replace(f"'{rel}'", f"'{uri}'")
+        html_body = html_body.replace(f'"{rel}"', f'"{uri}"')
+        html_body = html_body.replace(f"'{rel}'", f"'{uri}'")
 
-    html = html.replace(
+    html_body = html_body.replace(
         "v1.4</span> <span class=\"muted\">офлайн · HD · зум</span>",
         "iPhone</span> <span class=\"muted\">один файл · офлайн</span>",
     )
-    html = html.replace(
-        '<div class="muted">Файл: <span class="kbd">stepwgn-rp6-spada-guide/index.html</span></div>',
+    html_body = html_body.replace(
+        '<div class="muted">Онлайн: <a href="https://seregasmpl.github.io/stepwgn-rp6-spada-guide/">GitHub Pages</a></div>',
         '<div class="muted">Файлы → откройте в Safari</div>',
     )
-    html = html.replace(
+    html_body = html_body.replace(
         "Клик по фото — увеличение на весь экран (Esc — закрыть). Офлайн.",
-        "Клик по фото — увеличение. Меню: кнопка «Разделы» внизу. Офлайн.",
+        "Клик по фото — увеличение. Меню: «☰ Разделы». Офлайн.",
     )
 
+    html = html_body
     html = re.sub(
         r"<meta name=\"viewport\"[^>]*>",
         '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />',
@@ -230,13 +152,13 @@ def main():
         f"  <style>\n{css}\n  </style>\n</head>",
         1,
     )
-    html = html.replace(
-        "</body>",
-        f"  <script>\n{js}\n  </script>\n</body>",
-        1,
-    )
 
-    OUT.write_text(html, encoding="utf-8")
+    out_html = html + f"  <script>\n{js}\n  </script>\n" + html_tail
+
+    if "</html>" not in out_html or "initPanelRouter" not in out_html:
+        raise SystemExit("build validation failed: incomplete HTML")
+
+    OUT.write_text(out_html, encoding="utf-8")
     mb = OUT.stat().st_size / (1024 * 1024)
     print("written", OUT.name, f"{mb:.1f} MB", "images", len(cache), "uri MB", total / 1024 / 1024)
 

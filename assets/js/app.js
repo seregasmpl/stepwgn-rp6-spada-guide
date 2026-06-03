@@ -2,6 +2,51 @@ function norm(s) {
   return (s || "").toLowerCase().replace(/\s+/g, " ").trim();
 }
 
+function cssEscape(value) {
+  if (typeof CSS !== "undefined" && typeof CSS.escape === "function") {
+    return CSS.escape(value);
+  }
+  return String(value).replace(/[^a-zA-Z0-9_\u00A0-\uFFFF-]/g, "\\$&");
+}
+
+function closeMobileNav() {
+  document.querySelector(".nav")?.classList.remove("is-open");
+  document.querySelector(".nav-backdrop")?.classList.remove("is-open");
+}
+
+function initMobileNav() {
+  const nav = document.querySelector(".nav");
+  if (!nav) return;
+
+  let btn = document.querySelector("[data-nav-toggle]");
+  let backdrop = document.querySelector("[data-nav-backdrop]");
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "nav-toggle";
+    btn.setAttribute("data-nav-toggle", "");
+    btn.textContent = "☰ Разделы";
+    nav.parentNode.insertBefore(btn, nav);
+  }
+  if (!backdrop) {
+    backdrop = document.createElement("div");
+    backdrop.className = "nav-backdrop";
+    backdrop.setAttribute("data-nav-backdrop", "");
+    document.body.appendChild(backdrop);
+  }
+
+  const close = () => closeMobileNav();
+  const open = () => {
+    nav.classList.add("is-open");
+    backdrop.classList.add("is-open");
+  };
+  btn.addEventListener("click", () => {
+    if (nav.classList.contains("is-open")) close();
+    else open();
+  });
+  backdrop.addEventListener("click", close);
+}
+
 function hashTarget() {
   return (location.hash || "").replace(/^#/, "");
 }
@@ -54,8 +99,8 @@ function scrollMainTop() {
 function scrollNavLinkIntoView(id) {
   const hash = hashTarget();
   const link =
-    document.querySelector(`[data-nav-item][href="#${CSS.escape(hash)}"]`) ||
-    document.querySelector(`[data-nav-item][href="#${CSS.escape(id)}"]`);
+    document.querySelector(`[data-nav-item][href="#${cssEscape(hash)}"]`) ||
+    document.querySelector(`[data-nav-item][href="#${cssEscape(id)}"]`);
   if (link) {
     link.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
@@ -77,6 +122,7 @@ function showPanel(id, { scroll = true } = {}) {
     el.classList.remove("is-active");
   }
   panel.classList.add("is-active");
+  closeMobileNav();
 
   const titleEl = document.querySelector("[data-panel-title] strong");
   if (titleEl) {
@@ -145,7 +191,7 @@ function initPanelRouter() {
     if (showPanel(panelId)) {
       history.replaceState(null, "", href.startsWith("#") ? href : "#" + id);
     }
-  });
+  }, { passive: false });
 
   document.querySelector("[data-panel-prev]")?.addEventListener("click", () => navigatePanel(-1));
   document.querySelector("[data-panel-next]")?.addEventListener("click", () => navigatePanel(1));
@@ -220,7 +266,13 @@ function initLightbox() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initPanelRouter();
-  initNavFilter();
-  initLightbox();
+  try {
+    initMobileNav();
+    initPanelRouter();
+    initNavFilter();
+    initLightbox();
+  } catch (err) {
+    console.error("Guide init failed:", err);
+    document.querySelector("main")?.classList.add("init-failed");
+  }
 });

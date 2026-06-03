@@ -14,11 +14,13 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
+html{-webkit-text-size-adjust:100%}
 body{
   margin:0;
   font-family:var(--sans);
   background:linear-gradient(180deg,var(--bg),#070a0f);
   color:var(--text);
+  -webkit-overflow-scrolling:touch;
 }
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -44,10 +46,81 @@ header{
   min-height:calc(100vh - var(--header-h) - 32px);
 }
 @media (max-width: 980px){
-  .layout{grid-template-columns:1fr}
-  .nav{max-height:40vh}
-  .content-col{max-height:none}
+  :root{--header-h:56px}
+  .layout{
+    display:flex;
+    flex-direction:column;
+    grid-template-columns:1fr;
+    min-height:calc(100dvh - var(--header-h) - 16px);
+  }
+  .nav-toggle{
+    display:block;
+    width:100%;
+    margin-bottom:8px;
+    padding:12px 14px;
+    font-size:15px;
+    font-weight:600;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:rgba(102,179,255,.12);
+    color:var(--text);
+    cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .nav{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    top:auto;
+    max-height:min(70vh,520px);
+    z-index:50;
+    border-radius:16px 16px 0 0;
+    transform:translateY(110%);
+    transition:transform .25s ease;
+    box-shadow:0 -8px 32px rgba(0,0,0,.45);
+    padding-bottom:max(12px,env(safe-area-inset-bottom));
+  }
+  .nav.is-open{transform:translateY(0)}
+  .nav-backdrop{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    z-index:49;
+  }
+  .nav-backdrop.is-open{display:block}
+  .content-col{
+    position:relative;
+    top:auto;
+    flex:1;
+    min-height:0;
+    max-height:none;
+    width:100%;
+  }
+  .main-scroll{
+    overflow:visible;
+    flex:1;
+    min-height:min(55dvh, calc(100dvh - var(--header-h) - 72px));
+    -webkit-overflow-scrolling:touch;
+  }
+  .panel-btn{
+    min-width:48px;
+    min-height:48px;
+    font-size:20px;
+  }
+  .nav a{
+    padding:12px;
+    font-size:15px;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .nav input{font-size:16px;padding:12px}
+  .table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nav-foot{display:none}
+  .lightbox{padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))}
+  .lightbox-close{top:max(12px,env(safe-area-inset-top));right:12px;min-width:48px;min-height:48px}
 }
+.nav-toggle{display:none}
 
 .nav{
   position:sticky;
