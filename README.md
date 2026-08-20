@@ -8,6 +8,12 @@
 
 Откройте [`index.html`](index.html) в браузере (двойной клик или «Open with Live Server»).
 
+**Магнитола отдельно:** [`gathers/index.html`](gathers/index.html) — только LXM-247VFNi.
+
+Онлайн:
+- STEP WGN: https://seregasmpl.github.io/stepwgn-rp6-spada-guide/
+- Магнитола: https://seregasmpl.github.io/stepwgn-rp6-spada-guide/gathers/
+
 Для iPhone без интернета после скачивания репозитория: [`STEPWGN-SPADA-guide-iphone.html`](STEPWGN-SPADA-guide-iphone.html) (один файл, всё внутри).
 
 ## Опубликовать на GitHub (ссылка в интернете)
