@@ -44,6 +44,7 @@ def extract_panel(html: str, pid: str) -> str:
     block = block.replace('href="#honda-connect"', 'href="../index.html#honda-connect"')
     block = block.replace('href="#connect-hardware"', 'href="../index.html#connect-hardware"')
     block = block.replace('href="#cameras-multiview"', 'href="../index.html#cameras-multiview"')
+    block = block.replace("./assets/", "../assets/")
     # remove data-nav-item from external links so they don't get intercepted as panels
     block = re.sub(
         r'<a data-nav-item href="\.\./index\.html#([^"]+)">',
