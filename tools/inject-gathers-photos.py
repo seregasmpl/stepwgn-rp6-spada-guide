@@ -5,11 +5,16 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
-BASE = "./assets/img/clicccar/1320797"
+BASE = "./assets/img/gathers-ru"
+FALLBACK = "./assets/img/clicccar/1320797"
 
 
 def fig(name: str, caption: str, alt: str | None = None) -> str:
-    src = f"{BASE}/{name}"
+    src_path = ROOT / "assets" / "img" / "gathers-ru" / name
+    if not src_path.is_file():
+        src = f"{FALLBACK}/{name}"
+    else:
+        src = f"{BASE}/{name}"
     a = alt or caption
     return (
         f'<figure><img src="{src}" alt="{a}" class="zoomable" '
