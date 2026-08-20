@@ -1,134 +1,174 @@
 # -*- coding: utf-8 -*-
-"""Inject Clicccar Honda CONNECT photos into gathers-* panels."""
-from pathlib import Path
+"""Inject ALL gathers-ru photos into gathers panels + rewrite main guide paths."""
+from __future__ import annotations
+
 import re
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
+RU = ROOT / "assets" / "img" / "gathers-ru"
 BASE = "./assets/img/gathers-ru"
-FALLBACK = "./assets/img/clicccar/1320797"
+MARKER = "<!-- gathers-photos -->"
+
+CAPTIONS = {
+    "st15-cs-hc-0-main-we.jpg": "ГУ в салоне",
+    "st15-cs-hc-1-honda-connect-switch-we.jpg": "Экран и кнопки",
+    "st15-cs-hc-1-honda-connect-switch.jpg": "Экран и кнопки",
+    "st15-cs-hc-2-home.jpg": "HOME",
+    "st15-cs-hc-2-2-home.jpg": "HOME — свайп",
+    "st15-cs-hc-6-talking-switch-we.jpg": "Разговор сзади",
+}
 
 
-def fig(name: str, caption: str, alt: str | None = None) -> str:
-    src_path = ROOT / "assets" / "img" / "gathers-ru" / name
-    if not src_path.is_file():
-        src = f"{FALLBACK}/{name}"
-    else:
-        src = f"{BASE}/{name}"
-    a = alt or caption
+def caption(name: str) -> str:
+    if name in CAPTIONS:
+        return CAPTIONS[name]
+    # strip prefix noise
+    n = name.replace("st15-cs-hc-", "").replace(".jpg", "")
+    return n.replace("-", " ")[:48]
+
+
+def fig(name: str) -> str:
+    src = f"{BASE}/{name}"
+    c = caption(name)
     return (
-        f'<figure><img src="{src}" alt="{a}" class="zoomable" '
-        f'data-full="{src}" loading="lazy"><figcaption>{caption}</figcaption></figure>'
+        f'<figure><img src="{src}" alt="{c}" class="zoomable" '
+        f'data-full="{src}" loading="lazy"><figcaption>{c}</figcaption></figure>'
     )
 
 
-def grid(*items: tuple[str, str]) -> str:
-    figs = "\n          ".join(fig(n, c) for n, c in items)
+def grid(names: list[str]) -> str:
+    figs = "\n          ".join(fig(n) for n in names if (RU / n).is_file())
     return f'\n        <div class="img-grid">\n          {figs}\n        </div>\n'
 
 
-PHOTOS = {
-    "gathers-start": grid(
-        ("st15-cs-hc-0-main-we.jpg", "ГУ в салоне"),
-        ("st15-cs-hc-1-honda-connect-switch-we.jpg", "Кнопки под экраном"),
-        ("st15-cs-hc-2-home.jpg", "HOME — главная"),
-    ),
-    "gathers-keys": grid(
-        ("st15-cs-hc-1-honda-connect-switch-we.jpg", "Ряд кнопок"),
-        ("st15-cs-hc-1-honda-connect-switch.jpg", "Крупнее"),
-        ("st15-cs-hc-6-talking-switch-we.jpg", "Разговор с задним рядом"),
-    ),
-    "gathers-home": grid(
-        ("st15-cs-hc-2-home.jpg", "HOME"),
-        ("st15-cs-hc-2-2-home.jpg", "Свайп иконок"),
-        ("st15-cs-hc-3-home-1-navi-menu.jpg", "Меню навигации"),
-        ("st15-cs-hc-3-2-home-2-Apple-CarPlay.jpg", "Apple CarPlay"),
-        ("st15-cs-hc-3-3-home-3-Android-Auto.jpg", "Android Auto"),
-        ("st15-cs-hc-3-4-home-4-telephone.jpg", "Телефон"),
-        ("st15-cs-hc-3-5-home-5-setting-and-information.jpg", "Настройки / Инфо"),
-        ("st15-cs-hc-3-6-home-6-Honda-Total-Care.jpg", "Honda Total Care"),
-        ("st15-cs-hc-3-7-home-7-Audio-Source.jpg", "Источник аудио"),
-        ("st15-cs-hc-3-8-home-8-owners-manual.jpg", "Руководство"),
-        ("st15-cs-hc-3-9-home-9-Wi-Fi.jpg", "Wi‑Fi в салоне"),
-        ("st15-cs-hc-3-10-home-10-clock.jpg", "Часы"),
-        ("st15-cs-hc-3-11-home-11-menu-custmize.jpg", "Настройка HOME"),
-        ("st15-cs-hc-3-14-home-14-PM2.5.jpg", "PM2.5"),
-        ("st15-cs-hc-3-15-home-15-multi-view-camera.jpg", "Камеры"),
-    ),
-    "gathers-navi": grid(
-        ("st15-cs-hc-3-home-1-navi-menu.jpg", "Меню навигации"),
-        ("st15-cs-hc-7-owners-manual.jpg", "Руководство в мониторе"),
-        ("st15-cs-hc-7-2-owners-manual.jpg", "Разделы руководства"),
-        ("st15-cs-hc-7-4-owners-manual.jpg", "Поиск в руководстве"),
-    ),
-    "gathers-audio": grid(
-        ("st15-cs-hc-3-7-home-7-Audio-Source.jpg", "Источник аудио"),
-        ("st15-cs-hc-3-7-2-home-7-Audio-Source.jpg", "Список источников"),
-        ("st15-cs-hc-3-7-3-home-7-Audio-Source.jpg", "Источники"),
-        ("st15-cs-hc-5-2-set-and-info-2-av.jpg", "Настройки AV"),
-        ("st15-cs-hc-5-2-1-set-and-info-2-av-1-sound-setting.jpg", "Звук"),
-        ("st15-cs-hc-5-7-3-set-and-info-7-volume-set-3-audio.jpg", "Громкость аудио"),
-    ),
-    "gathers-phone": grid(
-        ("st15-cs-hc-3-4-home-4-telephone.jpg", "Телефон"),
-        ("st15-cs-hc-3-4-2-home-4-telephone.jpg", "Экран телефона"),
-        ("st15-cs-hc-5-4-set-and-info-4-bluetooth-and-internavi-set.jpg", "Bluetooth / InterNavi"),
-        ("st15-cs-hc-5-4-1-set-and-info-4-bluetooth-and-internavi-set-1-bluetooth.jpg", "Bluetooth"),
-        ("st15-cs-hc-5-3-2-set-and-info-3-info-set-2-phone-set.jpg", "Настройки телефона"),
-        ("st15-cs-hc-5-7-2-set-and-info-7-volume-set-2-telephone.jpg", "Громкость телефона"),
-    ),
-    "gathers-settings": grid(
-        ("st15-cs-hc-3-5-home-5-setting-and-information.jpg", "Настройки / Инфо"),
-        ("st15-cs-hc-5-set-and-info.jpg", "7 пунктов настроек"),
-        ("st15-cs-hc-5-2-set-and-info-2-av.jpg", "AV"),
-        ("st15-cs-hc-5-3-set-and-info-3-info-set.jpg", "Информация"),
-        ("st15-cs-hc-5-4-set-and-info-4-bluetooth-and-internavi-set.jpg", "Bluetooth"),
-        ("st15-cs-hc-5-5-set-and-info-5-system-setting.jpg", "Система"),
-        ("st15-cs-hc-5-5-2-set-and-info-5-system-setting-2-hard-key.jpg", "Физ. кнопки"),
-        ("st15-cs-hc-5-5-2-2-set-and-info-5-system-setting-2-2-steering-switch.jpg", "Кнопки руля"),
-        ("st15-cs-hc-5-5-3-set-and-info-5-system-setting-3-clock-set.jpg", "Часы"),
-        ("st15-cs-hc-5-5-5-set-and-info-5-system-setting-5-camera.jpg", "Камера"),
-        ("st15-cs-hc-5-6-set-and-info-6-ipod-setting.jpg", "iPod"),
-        ("st15-cs-hc-5-7-1-set-and-info-7-volume-set-1-system.jpg", "Громкость система"),
-    ),
-    "gathers-extra": grid(
-        ("st15-cs-hc-5-3-3-set-and-info-3-info-set-3-etc-set.jpg", "ETC"),
-        ("st15-cs-hc-6-talking-switch-we.jpg", "Разговор сзади"),
-        ("st15-cs-hc-5-7-4-set-and-info-7-volume-set-4-taliking-with-rear-passenger-system.jpg", "Громкость разговора"),
-        ("st15-cs-hc-3-15-home-15-multi-view-camera.jpg", "Multi-View"),
-        ("st15-cs-hc-3-15-2-home-15-multi-view-camera.jpg", "Камера"),
-        ("st15-cs-hc-3-14-home-14-PM2.5.jpg", "PM2.5"),
-        ("st15-cs-hc-3-6-home-6-Honda-Total-Care.jpg", "Honda Total Care"),
-        ("st15-cs-hc-5-5-5-set-and-info-5-system-setting-5-camera.jpg", "Настройка камеры"),
-    ),
-}
-
-MARKER = "<!-- gathers-photos -->"
+def classify(name: str) -> str:
+    n = name.lower()
+    if name.startswith("st15-cs-hc-0") or name.startswith("st15-cs-hc-1"):
+        return "gathers-start"
+    if "talking" in n or name.startswith("st15-cs-hc-6"):
+        return "gathers-keys"
+    if "honda-connect-switch" in n:
+        return "gathers-keys"
+    if "owners-manual" in n or name.startswith("st15-cs-hc-7"):
+        return "gathers-navi"
+    if "navi-menu" in n or "navi" in n and "home-1" in n:
+        return "gathers-navi"
+    if "audio" in n or "-av" in n or "sound" in n or "dvd" in n or "recording" in n or "ipod" in n:
+        return "gathers-audio"
+    if "telephone" in n or "phone" in n or "bluetooth" in n:
+        return "gathers-phone"
+    if "etc" in n or "pm2.5" in n or "camera" in n or "parking" in n or "total-care" in n:
+        return "gathers-extra"
+    if "set-and-info" in n or "system-setting" in n or "volume-set" in n:
+        return "gathers-settings"
+    if "home" in n:
+        return "gathers-home"
+    return "gathers-extra"
 
 
 def inject(html: str, pid: str, photos: str) -> str:
-    # remove old injected block if re-run
     html = re.sub(
         rf'(<section id="{re.escape(pid)}"[\s\S]*?){re.escape(MARKER)}[\s\S]*?{re.escape(MARKER)}\s*',
         r"\1",
         html,
         count=1,
     )
-    # insert after <h2>...</h2>
     pat = rf'(<section id="{re.escape(pid)}" class="page-panel"[^>]*>\s*<h2>[^<]*</h2>)'
     repl = rf"\1\n        {MARKER}{photos}        {MARKER}"
     new_html, n = re.subn(pat, repl, html, count=1)
     if n != 1:
-        raise SystemExit(f"failed inject {pid}")
+        raise SystemExit(f"inject fail {pid}")
     return new_html
 
 
+def rewrite_main_guide_paths(html: str) -> str:
+    def repl(m: re.Match) -> str:
+        attr = m.group(1)
+        path = m.group(2)
+        name = Path(path).name
+        base = re.sub(r"-\d+x\d+(?=\.jpg$)", "", name, flags=re.I)
+        if (RU / base).is_file():
+            return f'{attr}="./assets/img/gathers-ru/{base}"'
+        if (RU / name).is_file():
+            return f'{attr}="./assets/img/gathers-ru/{name}"'
+        return m.group(0)
+
+    return re.sub(
+        r'(src|data-full)="(\./assets/img/clicccar/1320797/[^"]+)"',
+        repl,
+        html,
+    )
+
+
+def ru_captions_in_honda_connect(html: str) -> str:
+    """Replace leftover JP figcaptions near gathers-ru images in main CONNECT panels."""
+    reps = [
+        (">ナビ<", ">Навигация<"),
+        (">設定／情報<", ">Настройки / Инфо<"),
+        (">取扱説明書<", ">Руководство<"),
+        (">AV設定<", ">Настройки AV<"),
+        (">情報設定<", ">Настройки информации<"),
+        (">システム設定<", ">Системные настройки<"),
+        (">リスト 7 пунктов<", ">7 пунктов настроек<"),
+        (">список 7 пунктов<", ">7 пунктов настроек<"),
+    ]
+    for a, b in reps:
+        html = html.replace(a, b)
+    return html
+
+
 def main():
+    buckets: dict[str, list[str]] = {k: [] for k in (
+        "gathers-start", "gathers-keys", "gathers-home", "gathers-navi",
+        "gathers-audio", "gathers-phone", "gathers-settings", "gathers-extra",
+    )}
+    for name in sorted(p.name for p in RU.glob("*.jpg")):
+        buckets[classify(name)].append(name)
+
+    # Force overview + key panels to share important shots
+    for n in (
+        "st15-cs-hc-0-main-we.jpg",
+        "st15-cs-hc-1-honda-connect-switch-we.jpg",
+        "st15-cs-hc-1-honda-connect-switch.jpg",
+        "st15-cs-hc-2-home.jpg",
+        "st15-cs-hc-5-set-and-info.jpg",
+    ):
+        if (RU / n).is_file() and n not in buckets["gathers-start"]:
+            buckets["gathers-start"].insert(0, n)
+    for n in (
+        "st15-cs-hc-1-honda-connect-switch-we.jpg",
+        "st15-cs-hc-1-honda-connect-switch.jpg",
+        "st15-cs-hc-6-talking-switch-we.jpg",
+    ):
+        if (RU / n).is_file() and n not in buckets["gathers-keys"]:
+            buckets["gathers-keys"].append(n)
+
+    prefer = [
+        "st15-cs-hc-0-main-we.jpg",
+        "st15-cs-hc-1-honda-connect-switch-we.jpg",
+        "st15-cs-hc-2-home.jpg",
+        "st15-cs-hc-5-set-and-info.jpg",
+    ]
+    start = buckets["gathers-start"]
+    buckets["gathers-start"] = [n for n in prefer if (RU / n).is_file()] + [
+        n for n in start if n not in prefer
+    ]
+
     html = INDEX.read_text(encoding="utf-8")
-    for pid, photos in PHOTOS.items():
-        html = inject(html, pid, photos)
+    for pid, names in buckets.items():
+        seen = set()
+        uniq = []
+        for n in names:
+            if n not in seen:
+                seen.add(n)
+                uniq.append(n)
+        html = inject(html, pid, grid(uniq))
+    html = rewrite_main_guide_paths(html)
+    html = ru_captions_in_honda_connect(html)
     INDEX.write_text(html, encoding="utf-8")
-    print("injected", len(PHOTOS), "panels")
+    print("ok", {k: len(v) for k, v in buckets.items()})
 
 
 if __name__ == "__main__":
