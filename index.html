@@ -1523,6 +1523,100 @@
         <div class="callout bad">На БК: <span class="kbd">エンジン油圧異常</span> / <span class="kbd">エンジン冷却水高温</span> — остановиться, заглушить, см. OM (не продолжать поездку).</div>
       </section>
 
+      <section id="drh-224sd" class="page-panel" data-panel>
+        <h2>Драйврек Gathers DRH-224SD</h2>
+        <p>Чистый Honda Access / Gathers <span class="kbd">DRH-224SD</span> (фронт или фронт+зад). Карта — обычно microSD <b>32 GB в комплекте</b>; сторонние карты часто не принимаются.</p>
+        <div class="callout">
+          <b>Просмотр на ГУ (LXM-247VFNi)? Нет.</b> На сайте Honda Access прямо: «записи с этого аппарата на нави не воспроизводятся».
+          В OM магнитолы меню <span class="kbd">ドライブレコーダー</span> / иконка на HOME описаны для <b>нави-связанных</b> моделей
+          <span class="kbd">DRH-229ND</span> и <span class="kbd">DRH-204VD</span> — это то «глубокое меню», которое бывает в гайдах.
+          У <b>224SD</b> просмотр только через приложение <span class="kbd">withDR</span> (или ПК).
+        </div>
+        <p>Что ГУ всё же умеет при установленном 224SD (если дилер подключил сигнал):</p>
+        <ul>
+          <li>Кнопка <span class="kbd">オプション</span> под экраном — если в настройках hard key назначена «ручная запись драйврека» — стартует event-запись на сам регистратор (не плеер на экране).</li>
+          <li>Слот SD в ГУ — <b>не</b> для карты драйврека: карта сидит в корпусе регистратора у зеркала.</li>
+        </ul>
+        <p class="muted">Дальше: <a data-nav-item href="#drh-format">формат карты</a> · <a data-nav-item href="#drh-app">просмотр в withDR</a>.</p>
+      </section>
+
+      <section id="drh-format" class="page-panel" data-panel>
+        <h2>DRH-224SD — форматирование microSD</h2>
+        <div class="callout bad">Формат <b>стирает всё</b>, включая защищённые event-файлы. Нужные ролики сначала скачай в телефон/ПК.</div>
+        <h3>Правила</h3>
+        <ul>
+          <li>Форматируй <b>на самом регистраторе</b> (или фирменным SD Card Formatter с сайта Kenwood/Honda OEM) — <b>не</b> «Форматировать» из Windows/macOS/телефона.</li>
+          <li>Новую / после ошибок чтения — сначала формат в аппарате.</li>
+          <li>Honda: для штатной карты «профилактика раз в N дней» не обязательна; формат — когда ошибки записи/чтения или аппарат не стартует нормально.</li>
+        </ul>
+        <h3>На корпусе регистратора (рекомендуется)</h3>
+        <ol>
+          <li>Зажигание / POWER <span class="kbd">ON</span>, карта вставлена, идёт обычная запись.</li>
+          <li>Зажми кнопку <span class="kbd">MIC</span> на корпусе <b>≥ 5 секунд</b>.</li>
+          <li>Голос примерно: «форматируем SD… все данные удалятся… после сигнала в течение 5 с нажми ту же кнопку снова» + короткий «пип».</li>
+          <li>В течение <b>5 с</b> снова нажми <span class="kbd">MIC</span>.</li>
+          <li>Услышишь «начали формат» → затем «формат завершён».</li>
+        </ol>
+        <p class="muted">Если кнопки/подписи на корпусе другие — смотри бумажную инструкцию к твоему комплекту; логика «долгое нажатие → подтверждение в 5 с» та же (Honda Access support).</p>
+        <h3>Через ПК (если нельзя на корпусе)</h3>
+        <ol>
+          <li>Вынь microSD из регистратора (см. OM: обычно открыть крышку слота на корпусе).</li>
+          <li>Вставь в кардридер ПК.</li>
+          <li>Поставь <b>SD Card Formatter</b> с OEM-страницы Honda/Kenwood: <a href="https://www.kenwood.com/jp/products/oem/honda/04/" target="_blank" rel="noreferrer">kenwood.com/…/honda/04</a>.</li>
+          <li>В программе выбери именно букву этой карты → Format. Не перепутай диск.</li>
+          <li>Верни карту в регистратор, POWER ON — аппарат создаст свои папки.</li>
+        </ol>
+      </section>
+
+      <section id="drh-app" class="page-panel" data-panel>
+        <h2>DRH-224SD — просмотр в приложении withDR</h2>
+        <p>Приложение: <span class="kbd">withDR</span> (JVCKENWOOD). Для 224SD — именно оно, не «DR Viewer S» (то для 229).</p>
+        <ul>
+          <li>Android: <a href="https://play.google.com/store/apps/details?id=com.jvckenwood.withdr" target="_blank" rel="noreferrer">Google Play — withDR</a></li>
+          <li>iPhone: <a href="https://apps.apple.com/app/id1470542607" target="_blank" rel="noreferrer">App Store — withDR</a></li>
+        </ul>
+
+        <h3>Подготовка</h3>
+        <ul>
+          <li>Карта вставлена в регистратор.</li>
+          <li>Пароль Wi‑Fi — на <b>наклейке на задней обложке</b> бумажного OM (SSID вида <span class="kbd">DIRECT-DRH_224SD_…</span>).</li>
+          <li>POWER <span class="kbd">ON</span>, машина <b>стоит</b> (в движении Wi‑Fi регистратора режется).</li>
+          <li>GPS «видит» стоянку + идёт обычная запись — иначе Wi‑Fi может не подняться.</li>
+          <li>iPhone + беспроводной CarPlay: сначала <b>отключи CarPlay</b> на ГУ (список подключений на HOME / иконка CarPlay), иначе телефон снова уйдёт в CarPlay и отвалится от драйврека.</li>
+          <li>Android: включи <b>геолокацию</b> (нужна для поиска Wi‑Fi устройств).</li>
+        </ul>
+
+        <h3>iPhone</h3>
+        <ol>
+          <li><span class="kbd">Настройки</span> → <span class="kbd">Wi‑Fi</span> → сеть <span class="kbd">DIRECT-DRH_224SD_…</span> → пароль с наклейки.</li>
+          <li>«Нет интернета» — нормально для iOS.</li>
+          <li>Открой <span class="kbd">withDR</span> → разреши локальную сеть / медиа при запросе.</li>
+          <li>Справа сверху иконка стрелки / подключения → дождись «запись драйврека остановлена» → OK.</li>
+          <li>Вкладка <span class="kbd">ドライブレコーダー内</span> («в регистраторе»): <span class="kbd">常時録画</span> / <span class="kbd">イベント</span> / <span class="kbd">静止画</span> → тап по файлу.</li>
+        </ol>
+
+        <h3>Android</h3>
+        <ol>
+          <li>Открой <span class="kbd">withDR</span> → стрелка подключения справа сверху.</li>
+          <li>Выбери SSID драйврека → пароль → OK.</li>
+          <li>После «запись остановлена» — вкладка «в регистраторе» → списки роликов.</li>
+        </ol>
+
+        <h3>Сохранить ролик в Галерею телефона</h3>
+        <ol>
+          <li>Открой файл во вкладке «в регистраторе» → дождись скачивания в приложение.</li>
+          <li>Иконка сохранения слева внизу → «да».</li>
+          <li>Вкладка «в смартфоне» → тот же файл → иконка справа внизу → сохранить в Фото/Галерею.</li>
+        </ol>
+
+        <h3>ПК (кратко)</h3>
+        <p>Вынь карту → фирменный viewer «DRIVE REVIEWER» / софт с страницы продукта Honda Access (нужен интернет при установке). Обычный VLC иногда не читает служебные файлы как надо.</p>
+
+        <div class="callout">
+          Не путай: слот SD в <b>магнитоле</b> — музыка/видео для ГУ. Карта драйврека живёт <b>только</b> в корпусе DRH-224SD.
+        </div>
+      </section>
+
       <section id="glossary" class="page-panel" data-panel>
         <h2>JP→RU: частые надписи</h2>
         <table class="table">
@@ -1545,6 +1639,10 @@
             <tr><td><span class="kbd">オフフック</span></td><td>снять трубку / позвонить</td></tr>
             <tr><td><span class="kbd">後席会話サポート</span></td><td>голос в задние динамики</td></tr>
             <tr><td><span class="kbd">モニター Open</span></td><td>открыть панель диска/SD</td></tr>
+            <tr><td><span class="kbd">ドライブレコーダー</span></td><td>видеорегистратор (меню на ГУ — у 229ND/204VD)</td></tr>
+            <tr><td><span class="kbd">常時録画</span></td><td>непрерывная запись</td></tr>
+            <tr><td><span class="kbd">イベント記録</span></td><td>запись по удару / событию</td></tr>
+            <tr><td><span class="kbd">withDR</span></td><td>приложение просмотра DRH-224SD</td></tr>
 
             <tr><td>✤</td><td>зависит от комплектации</td></tr>
           </tbody>
@@ -1569,16 +1667,20 @@
           <li><b>Практический обзор меню приборки/колёсика</b> (японский): <a href="https://clicccar.com/2023/11/18/1312122/" target="_blank" rel="noreferrer">статья</a></li>
           <li><b>Практический обзор режимов приборки</b> (японский, 2眼/バー/シンプル): <a href="https://clicccar.com/2023/11/14/1307852/" target="_blank" rel="noreferrer">статья</a></li>
           <li><b>Gathers LXM-247VFNi</b> (офиц. OM + 簡単操作): <a href="https://www.honda.co.jp/manual-access/navi/lxm-247vfni/" target="_blank" rel="noreferrer">honda.co.jp/manual-access/navi/lxm-247vfni</a></li>
-          <li><b>Gathers LXM-247VFNi</b> (офиц. OM + 簡単操作): <a href="https://www.honda.co.jp/manual-access/navi/lxm-247vfni/" target="_blank" rel="noreferrer">honda.co.jp/manual-access/navi/lxm-247vfni</a></li>
           <li><b>Honda CONNECT (практика/меню)</b> (японский): <a href="https://clicccar.com/2023/11/25/1320797/" target="_blank" rel="noreferrer">статья</a></li>
           <li><b>Clicccar: салон и сиденья 9‑10</b>: <a href="https://clicccar.com/2023/11/20/1313854/" target="_blank" rel="noreferrer">статья</a></li>
           <li><b>Clicccar: хранение 9‑12</b>: <a href="https://clicccar.com/2023/11/22/1317716/" target="_blank" rel="noreferrer">статья</a></li>
+          <li><b>DRH-224SD</b> (продукт Honda Access): <a href="https://www.honda.co.jp/ACCESS/driverecorder/detail/drh-224sd/" target="_blank" rel="noreferrer">страница</a></li>
+          <li><b>DRH-224SD support</b> (формат / Wi‑Fi): <a href="https://www.honda.co.jp/manual-access/support/driverecorder/drh-224sd.html" target="_blank" rel="noreferrer">symptoms</a></li>
+          <li><b>withDR на iPhone</b>: <a href="https://www.honda.co.jp/ACCESS/customer/driverecorder/dr_015.html" target="_blank" rel="noreferrer">FAQ</a></li>
+          <li><b>withDR на Android</b>: <a href="https://www.honda.co.jp/ACCESS/customer/driverecorder/dr_016.html" target="_blank" rel="noreferrer">FAQ</a></li>
+          <li><b>Просмотр на нави (только нави-тип)</b>: <a href="https://www.honda.co.jp/ACCESS/customer/navi_audio/na_023.html" target="_blank" rel="noreferrer">FAQ na_023</a></li>
         </ul>
       </section>
 
       </main>
       <footer class="content-foot muted">
-        Honda STEP WGN RP6 SPADA — v1.6. Клик по фото — увеличение на весь экран (Esc — закрыть). Офлайн.
+        Honda STEP WGN RP6 SPADA — v1.7. Клик по фото — увеличение на весь экран (Esc — закрыть). Офлайн.
       </footer>
     </div>
 
@@ -1619,6 +1721,11 @@
         <li><a class="sub" data-nav-item href="#gathers-extra">ETC / 後席会話 / камеры</a></li>
         <li><a class="sub" data-nav-item href="#honda-connect">↳ фото HOME + настройки</a></li>
         <li><a class="sub" data-nav-item href="#connect-hardware">↳ фото кнопок</a></li>
+
+        <li class="nav-group">Драйврек DRH-224SD</li>
+        <li><a data-nav-item href="#drh-224sd">Обзор / почему не на ГУ</a></li>
+        <li><a class="sub" data-nav-item href="#drh-format">Формат microSD</a></li>
+        <li><a class="sub" data-nav-item href="#drh-app">Просмотр в withDR</a></li>
 
         <li class="nav-group">Салон</li>
         <li><a data-nav-item href="#controls-everywhere">Обзор салона</a></li>
